@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://turlang.github.io/site-pessoal/sitemap.xml

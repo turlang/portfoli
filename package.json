@@ -1,0 +1,11 @@
+{
+  "name": "portfolio-academico-3d-v10",
+  "version": "10.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "node scripts/build.js"
+  },
+  "devDependencies": {}
+}

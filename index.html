@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Evandro Ricardo de Souza | Desenvolvedor Web</title>
+  <meta name="description" content="Site pessoal profissional de Evandro Ricardo de Souza: desenvolvimento web, sistemas sob medida, interfaces responsivas e projetos digitais." />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <div class="tech-bg" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Página inicial">
+      <span class="brand-mark">ER</span>
+      <span><strong>Evandro Ricardo</strong><small>Desenvolvedor Web</small></span>
+    </a>
+    <button class="menu-btn" aria-label="Abrir menu" aria-expanded="false">☰</button>
+    <nav class="main-nav" aria-label="Navegação principal">
+      <a href="#resumo">Resumo</a>
+      <a href="sobre.html">Perfil</a>
+      <a href="projetos.html">Projetos</a>
+      <a href="#competencias">Competências</a>
+      <a href="#contato">Contato</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero section" id="resumo">
+      <div class="hero-copy">
+        <p class="eyebrow">Portfólio profissional • Desenvolvimento Web</p>
+        <h1>Aplicações digitais com estrutura, clareza e propósito.</h1>
+        <p class="lead">Site pessoal de Evandro Ricardo de Souza, organizado em formato editorial para apresentar trajetória, competências técnicas e projetos desenvolvidos em ambientes web.</p>
+        <div class="actions">
+          <a class="btn primary" href="projetos.html">Ver projetos</a>
+          <a class="btn ghost" href="#contato">Entrar em contato</a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-label="Composição visual tecnológica">
+        <div class="device-3d">
+          <div class="device-top">
+            <span></span><span></span><span></span>
+            <pre>const portfolio = {
+  foco: 'web',
+  metodo: 'clareza',
+  entrega: 'resultado'
+}</pre>
+          </div>
+          <div class="device-base"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section intro-grid" id="perfil">
+      <article class="paper-card">
+        <p class="eyebrow">Resumo profissional</p>
+        <h2>Desenvolvimento orientado ao usuário, ao negócio e à manutenção.</h2>
+        <p>Minha atuação combina prática administrativa, organização operacional e desenvolvimento web. Essa experiência contribui para criar sistemas com fluxos compreensíveis, interfaces objetivas e bases técnicas preparadas para evolução.</p>
+      </article>
+      <article class="paper-card stats-card">
+        <p class="eyebrow">Indicadores</p>
+        <div class="stats">
+          <strong>15+</strong><span>Projetos estruturados</span>
+          <strong>5+</strong><span>Anos de aprendizado aplicado</span>
+          <strong>100%</strong><span>Foco em solução prática</span>
+        </div>
+      </article>
+    </section>
+
+    <section class="section projects-section" id="projetos">
+      <div class="section-head centered">
+        <p class="eyebrow">Projetos selecionados</p>
+        <h2>Produção técnica apresentada em cards 3D.</h2>
+        <p>Os projetos abaixo representam diferentes contextos de aplicação: SaaS, RPG digital, prospecção comercial, e-commerce e controle financeiro.</p>
+      </div>
+
+      <div class="carousel-wrap">
+        <button class="carousel-btn prev" aria-label="Projeto anterior">‹</button>
+        <div class="carousel" id="projectCarousel" aria-live="polite">
+          <article class="project-card active" data-index="0">
+            <div class="project-art glossflow"><span>GlossFlow</span><i></i></div>
+            <p class="tag">Gestão / SaaS</p>
+            <h3>GlossFlow</h3>
+            <p>Plataforma para gestão de salão de beleza com agenda, clientes, serviços, estoque, financeiro e relatórios.</p>
+            <div class="chips"><span>React</span><span>Node.js</span><span>MongoDB</span><span>Prisma</span></div>
+          </article>
+          <article class="project-card" data-index="1">
+            <div class="project-art orc"><span>Mestre Orc</span><i></i></div>
+            <p class="tag">RPG / Comunidade</p>
+            <h3>Mestre Orc</h3>
+            <p>Portal para jogadores e mestres de RPG com campanhas, personagens, biblioteca e experiência temática.</p>
+            <div class="chips"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>MongoDB</span></div>
+          </article>
+          <article class="project-card" data-index="2">
+            <div class="project-art leads"><span>Prospecção</span><i></i></div>
+            <p class="tag">SaaS / Comercial</p>
+            <h3>Prospecção de Leads</h3>
+            <p>Sistema para captação, organização e acompanhamento de leads com funil comercial e planos de uso.</p>
+            <div class="chips"><span>Node.js</span><span>Express</span><span>MongoDB</span><span>CRM</span></div>
+          </article>
+          <article class="project-card" data-index="3">
+            <div class="project-art wallart"><span>WallArt</span><i></i></div>
+            <p class="tag">E-commerce</p>
+            <h3>WallArt Premium</h3>
+            <p>Apresentação comercial para papéis de parede, com estética premium, catálogo e experiência visual.</p>
+            <div class="chips"><span>React</span><span>CSS</span><span>UX/UI</span><span>SEO</span></div>
+          </article>
+          <article class="project-card" data-index="4">
+            <div class="project-art budget"><span>Orçamento</span><i></i></div>
+            <p class="tag">Web / Utilitário</p>
+            <h3>Orçamento Pessoal</h3>
+            <p>Aplicação para controle financeiro pessoal, categorias, metas, gráficos e organização de despesas.</p>
+            <div class="chips"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Charts</span></div>
+          </article>
+        </div>
+        <button class="carousel-btn next" aria-label="Próximo projeto">›</button>
+      </div>
+      <div class="dots" id="projectDots" aria-hidden="true"></div>
+    </section>
+
+    <section class="section competence" id="competencias">
+      <div class="section-head">
+        <p class="eyebrow">Competências técnicas</p>
+        <h2>Base técnica para construir do visual ao funcionamento.</h2>
+      </div>
+      <div class="competence-grid">
+        <article><h3>Front-end</h3><p>HTML, CSS, JavaScript, React, Vite, responsividade, acessibilidade e organização visual.</p></article>
+        <article><h3>Back-end</h3><p>Node.js, Express, Fastify, autenticação, APIs REST e regras de negócio.</p></article>
+        <article><h3>Banco de dados</h3><p>MongoDB, Prisma, modelagem inicial, persistência de dados e organização de entidades.</p></article>
+        <article><h3>Entrega</h3><p>Git, GitHub Pages, deploy, documentação, testes manuais e melhoria contínua.</p></article>
+      </div>
+    </section>
+
+    <section class="section contact" id="contato">
+      <div>
+        <p class="eyebrow">Contato</p>
+        <h2>Vamos conversar sobre seu próximo projeto?</h2>
+        <p>Estou disponível para desenvolvimento de sites, sistemas sob medida, portfólios, landing pages e aplicações web.</p>
+      </div>
+      <div class="contact-actions">
+        <a class="btn primary" href="https://wa.me/5511961372048" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn ghost" href="mailto:Turlang@outlook.com">E-mail</a>
+        <a class="btn ghost" href="https://www.linkedin.com/in/evandro-ricardo-de-souza-081155406" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© 2026 Evandro Ricardo de Souza. Site pessoal profissional.</p>
+    <p><a href="https://github.com/turlang" target="_blank" rel="noopener">GitHub</a> · <a href="mailto:Turlang@outlook.com">Turlang@outlook.com</a></p>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
