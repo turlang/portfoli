@@ -313,9 +313,11 @@
     const url = card.dataset.projectUrl;
     if (!url) return;
 
-    const openedWindow = window.open(url, '_blank', 'noopener,noreferrer');
-    if (openedWindow) openedWindow.opener = null;
-    else window.location.assign(url);
+    const link = document.createElement('a');
+    link.href = url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.click();
   }
 
   function syncFocusState() {
