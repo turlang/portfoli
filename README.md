@@ -29,6 +29,27 @@ O foco é demonstrar capacidade de construir aplicações completas, com atenç�
 | Papel de Parede | Landing page comercial | React, UX/UI, catálogo, WhatsApp CTA e responsividade |
 | FinançasPro BI | Dashboard financeiro/PWA | JavaScript, PWA, formulários, métricas e fluxo financeiro |
 
+## Sincronização automática com o GitHub
+
+Além dos estudos de caso selecionados manualmente, o site possui uma vitrine dinâmica que consulta os repositórios públicos da conta `turlang`.
+
+Para fazer um novo repositório aparecer automaticamente:
+
+1. deixe o repositório público;
+2. adicione uma descrição clara;
+3. adicione o tópico `portfolio` nas configurações do repositório;
+4. preencha o campo **Website** quando houver uma demonstração online.
+
+A sincronização:
+
+- ignora forks e repositórios arquivados;
+- mostra até 12 projetos marcados com `portfolio`;
+- ordena os projetos pela atualização mais recente;
+- utiliza cache local por uma hora;
+- oferece o botão **Atualizar agora**;
+- mantém os estudos de caso fixos caso a API do GitHub esteja indisponível;
+- não utiliza nem expõe token de acesso no navegador.
+
 ## Stack principal
 
 - HTML5
@@ -49,6 +70,7 @@ O foco é demonstrar capacidade de construir aplicações completas, com atenç�
 - TTS e automações
 - Foundry VTT
 - PWA
+- GitHub REST API
 - GitHub Pages e GitHub Actions
 - Render
 - Vercel
@@ -60,6 +82,7 @@ index.html
 sobre.html
 projetos.html
 assets/css/styles.css
+assets/css/github-projects.css
 assets/js/main.js
 docs/AUDITORIA_GITHUB_EMPREGABILIDADE_2026.md
 ```
@@ -83,13 +106,13 @@ Esse arquivo contém:
 
 ## Como testar localmente
 
-Abra o arquivo `index.html` no navegador.
-
-Opcionalmente, use um servidor local:
+Como a seção automática consulta uma API externa, execute o site por um servidor local em vez de abrir o HTML diretamente:
 
 ```bash
 npx serve .
 ```
+
+Depois, abra o endereço exibido no terminal.
 
 ## Posicionamento profissional
 
@@ -101,4 +124,3 @@ Desenvolvedor Full Stack com foco em aplicações SaaS, React, Node.js, TypeScri
 - Incluir links de demonstração online para os projetos que ainda não possuem deploy público.
 - Criar estudos de caso completos para GlossFlow, LeadHunter Pro e Mestre Orc Engine.
 - Adicionar métricas, desafios técnicos e resultados alcançados em cada case.
-- Manter a vitrine sincronizada com os projetos públicos mais relevantes do GitHub.
