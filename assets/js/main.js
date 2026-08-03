@@ -358,3 +358,194 @@ loadGithubProjects();
 document.querySelectorAll('[data-github-refresh]').forEach((button) => {
   button.addEventListener('click', () => loadGithubProjects(true));
 });
+
+(() => {
+  document.querySelector('.main-nav a[data-screen-target="github"]')?.remove();
+
+  const screenshot = (url) =>
+    `https://image.thum.io/get/width/1200/crop/700/noanimate/${url}`;
+  const githubPreview = (repository) =>
+    `https://opengraph.githubassets.com/portfolio-card/turlang/${repository}`;
+
+  const selectedProjects = Object.freeze({
+    GlossFlow: {
+      primary: screenshot('https://glossflow1.vercel.app/'),
+      fallback: githubPreview('glossflow1'),
+    },
+    'Mestre Orc': {
+      primary: screenshot('https://turlang.github.io/Mestre-orc/'),
+      fallback: githubPreview('Mestre-orc'),
+    },
+    'LeadHunter Pro': {
+      primary: screenshot('https://prospe-o-clientes.onrender.com/'),
+      fallback: githubPreview('Prospe--o-clientes'),
+    },
+    'WallArt Premium': {
+      primary: githubPreview('papel-parede'),
+    },
+    'FinançasPro BI': {
+      primary: screenshot('https://turlang.github.io/orcamento-pessoal/'),
+      fallback: githubPreview('orcamento-pessoal'),
+    },
+    'Mestre Orc Engine': {
+      primary: githubPreview('fenix'),
+    },
+    'DevClub Level Up': {
+      primary: githubPreview('DEVCLUB-LEVEL-UP'),
+    },
+  });
+
+  const visualStyle = document.createElement('style');
+  visualStyle.dataset.projectVisuals = 'true';
+  visualStyle.textContent = `
+    .project-art,
+    .repo-visual {
+      isolation: isolate;
+      background-color: #071426;
+    }
+
+    .project-preview-image,
+    .repo-preview-image {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transform: scale(1.035);
+      transition: opacity .45s ease, transform .7s cubic-bezier(.16,1,.3,1);
+    }
+
+    .project-art.has-preview .project-preview-image,
+    .repo-visual.has-preview .repo-preview-image {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .project-art::after,
+    .repo-visual::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(1,7,16,.08), rgba(1,7,16,.2) 44%, rgba(1,7,16,.88));
+    }
+
+    .project-art > span {
+      position: relative;
+      z-index: 3;
+      max-width: 88%;
+      padding: 5px 10px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 8px;
+      background: rgba(2,9,21,.72);
+      color: #fff;
+      font-size: clamp(18px, 2vw, 27px);
+      line-height: 1.1;
+      text-shadow: 0 2px 16px rgba(0,0,0,.9);
+      backdrop-filter: blur(8px);
+    }
+
+    .project-art.has-preview > i {
+      display: none;
+    }
+
+    .repo-visual {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .repo-visual > span,
+    .repo-visual > small {
+      position: relative;
+      z-index: 3;
+      transition: opacity .25s ease;
+    }
+
+    .repo-visual.has-preview > span {
+      opacity: 0;
+    }
+
+    .repo-visual > small {
+      padding: 4px 8px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 999px;
+      background: rgba(2,9,21,.76);
+      text-shadow: 0 2px 10px rgba(0,0,0,.9);
+      backdrop-filter: blur(8px);
+    }
+  `;
+  document.head.appendChild(visualStyle);
+
+  function attachPreview(container, primary, fallback, alt, className) {
+    if (!container || !primary || container.querySelector(`.${className}`)) return;
+
+    const image = document.createElement('img');
+    let fallbackUsed = false;
+
+    image.className = className;
+    image.alt = alt;
+    image.loading = 'lazy';
+    image.decoding = 'async';
+
+    image.addEventListener('load', () => {
+      container.classList.add('has-preview');
+    });
+
+    image.addEventListener('error', () => {
+      if (!fallbackUsed && fallback && fallback !== primary) {
+        fallbackUsed = true;
+        image.src = fallback;
+        return;
+      }
+
+      image.remove();
+      container.classList.remove('has-preview');
+    });
+
+    container.prepend(image);
+    image.src = primary;
+  }
+
+  document.querySelectorAll('.project-card').forEach((card) => {
+    const title = card.querySelector('h3')?.textContent?.trim();
+    const source = title ? selectedProjects[title] : null;
+    const visual = card.querySelector('.project-art');
+
+    if (!source || !visual) return;
+
+    attachPreview(
+      visual,
+      source.primary,
+      source.fallback,
+      `Prévia visual do projeto ${title}`,
+      'project-preview-image',
+    );
+  });
+
+  function hydrateGithubCards() {
+    document.querySelectorAll('.github-project-card').forEach((card) => {
+      const repositoryName = card.querySelector('h3')?.textContent?.trim();
+      const visual = card.querySelector('.repo-visual');
+
+      if (!repositoryName || !visual) return;
+
+      attachPreview(
+        visual,
+        githubPreview(repositoryName),
+        null,
+        `Prévia do repositório ${repositoryName}`,
+        'repo-preview-image',
+      );
+    });
+  }
+
+  const githubProjects = document.querySelector('[data-github-projects]');
+  if (githubProjects) {
+    new MutationObserver(hydrateGithubCards).observe(githubProjects, { childList: true });
+  }
+
+  hydrateGithubCards();
+})();
