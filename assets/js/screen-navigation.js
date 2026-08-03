@@ -217,3 +217,137 @@
 
   renderGithubPage();
 })();
+
+(() => {
+  const projectDestinations = Object.freeze({
+    GlossFlow: {
+      url: 'https://glossflow1.vercel.app/',
+      kind: 'demonstração',
+    },
+    'Mestre Orc': {
+      url: 'https://turlang.github.io/Mestre-orc/',
+      kind: 'demonstração',
+    },
+    'LeadHunter Pro': {
+      url: 'https://prospe-o-clientes.onrender.com/',
+      kind: 'demonstração',
+    },
+    'WallArt Premium': {
+      url: 'https://github.com/turlang/papel-parede',
+      kind: 'repositório',
+    },
+    'FinançasPro BI': {
+      url: 'https://turlang.github.io/orcamento-pessoal/',
+      kind: 'demonstração',
+    },
+    'Mestre Orc Engine': {
+      url: 'https://github.com/turlang/fenix',
+      kind: 'repositório',
+    },
+    'DevClub Level Up': {
+      url: 'https://github.com/turlang/DEVCLUB-LEVEL-UP',
+      kind: 'repositório',
+    },
+  });
+
+  const cards = [...document.querySelectorAll('.project-card')];
+  if (!cards.length) return;
+
+  const style = document.createElement('style');
+  style.dataset.projectCardLinks = 'true';
+  style.textContent = `
+    .project-card.is-clickable-project {
+      cursor: pointer;
+      padding-bottom: 54px;
+    }
+
+    .project-card.is-clickable-project::after {
+      content: attr(data-action-label);
+      position: absolute;
+      right: 16px;
+      bottom: 14px;
+      left: 16px;
+      display: flex;
+      min-height: 34px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      border: 1px solid rgba(88, 183, 255, .28);
+      border-radius: 9px;
+      background: rgba(7, 19, 38, .88);
+      color: #9fd4ff;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      opacity: .86;
+      transition: border-color .22s ease, background .22s ease, color .22s ease, opacity .22s ease;
+    }
+
+    .project-card.is-clickable-project::before {
+      content: '↗';
+      position: absolute;
+      right: 28px;
+      bottom: 21px;
+      z-index: 2;
+      color: #9fd4ff;
+      font-size: 15px;
+      pointer-events: none;
+    }
+
+    .project-card.is-clickable-project:hover::after,
+    .project-card.is-clickable-project:focus-visible::after {
+      border-color: rgba(88, 183, 255, .78);
+      background: rgba(13, 55, 104, .94);
+      color: #fff;
+      opacity: 1;
+    }
+
+    .project-card.is-clickable-project:focus-visible {
+      outline: 3px solid rgba(88, 183, 255, .92);
+      outline-offset: 5px;
+    }
+  `;
+  document.head.appendChild(style);
+
+  function openProject(card) {
+    const url = card.dataset.projectUrl;
+    if (!url) return;
+
+    const openedWindow = window.open(url, '_blank', 'noopener,noreferrer');
+    if (openedWindow) openedWindow.opener = null;
+    else window.location.assign(url);
+  }
+
+  function syncFocusState() {
+    cards.forEach((card) => {
+      card.tabIndex = card.classList.contains('active') ? 0 : -1;
+    });
+  }
+
+  cards.forEach((card) => {
+    const title = card.querySelector('h3')?.textContent?.trim();
+    const destination = title ? projectDestinations[title] : null;
+    if (!destination) return;
+
+    const actionLabel = destination.kind === 'demonstração' ? 'Abrir demonstração' : 'Abrir repositório';
+
+    card.classList.add('is-clickable-project');
+    card.dataset.projectUrl = destination.url;
+    card.dataset.actionLabel = actionLabel;
+    card.setAttribute('role', 'link');
+    card.setAttribute('aria-label', `${actionLabel} de ${title} em uma nova aba`);
+    card.setAttribute('title', `${actionLabel} de ${title}`);
+
+    card.addEventListener('click', () => openProject(card));
+    card.addEventListener('keydown', (event) => {
+      if (!['Enter', ' '].includes(event.key)) return;
+      event.preventDefault();
+      openProject(card);
+    });
+
+    const observer = new MutationObserver(syncFocusState);
+    observer.observe(card, { attributes: true, attributeFilter: ['class'] });
+  });
+
+  syncFocusState();
+})();
