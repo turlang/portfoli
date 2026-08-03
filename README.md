@@ -2,6 +2,10 @@
 
 Portfólio pessoal voltado para empregabilidade, apresentação profissional e demonstração de projetos Full Stack, SaaS, inteligência artificial, automação, dashboards e aplicações web.
 
+## Preview
+
+![Preview do Portfólio Profissional](docs/preview.svg)
+
 ## Objetivo do projeto
 
 Este repositório funciona como a porta de entrada para apresentar minha trajetória, competências técnicas e principais projetos desenvolvidos.
