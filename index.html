@@ -8,26 +8,29 @@
   <link rel="stylesheet" href="assets/css/styles.css" />
   <link rel="stylesheet" href="assets/css/github-projects.css" />
   <link rel="stylesheet" href="assets/css/hero-layout.css" />
+  <link rel="stylesheet" href="assets/css/screen-layout.css" />
 </head>
-<body>
+<body class="home-no-scroll">
   <div class="tech-bg" aria-hidden="true"></div>
+
   <header class="site-header">
-    <a class="brand" href="index.html" aria-label="Página inicial">
+    <a class="brand" href="#resumo" data-screen-target="resumo" aria-label="Página inicial">
       <span class="brand-mark">ER</span>
       <span><strong>Evandro Ricardo</strong><small>Desenvolvedor Full Stack</small></span>
     </a>
     <button class="menu-btn" aria-label="Abrir menu" aria-expanded="false">☰</button>
     <nav class="main-nav" aria-label="Navegação principal">
-      <a href="#resumo">Resumo</a>
-      <a href="sobre.html">Perfil</a>
-      <a href="projetos.html">Projetos</a>
-      <a href="#competencias">Competências</a>
-      <a href="#contato">Contato</a>
+      <a href="#resumo" data-screen-target="resumo">Resumo</a>
+      <a href="#perfil" data-screen-target="perfil">Perfil</a>
+      <a href="#projetos" data-screen-target="projetos">Projetos</a>
+      <a href="#github" data-screen-target="github">GitHub</a>
+      <a href="#competencias" data-screen-target="competencias">Competências</a>
+      <a href="#contato" data-screen-target="contato">Contato</a>
     </nav>
   </header>
 
-  <main>
-    <section class="hero section" id="resumo">
+  <main class="screen-deck" data-screen-deck>
+    <section class="hero section screen-panel is-active" id="resumo" data-screen-panel data-screen-name="Resumo" aria-hidden="false">
       <div class="hero-copy">
         <p class="eyebrow">Portfólio profissional • Full Stack • IA</p>
         <h1>
@@ -37,8 +40,8 @@
         </h1>
         <p class="lead">Desenvolvo produtos web, plataformas SaaS, automações e experiências com inteligência artificial, conectando interface, regras de negócio, dados e necessidades reais de usuários e empresas.</p>
         <div class="actions">
-          <a class="btn primary" href="projetos.html">Ver projetos</a>
-          <a class="btn ghost" href="#contato">Entrar em contato</a>
+          <a class="btn primary" href="#projetos" data-screen-target="projetos">Ver projetos</a>
+          <a class="btn ghost" href="#contato" data-screen-target="contato">Entrar em contato</a>
         </div>
       </div>
       <div class="hero-visual" aria-label="Composição visual tecnológica">
@@ -56,7 +59,7 @@
       </div>
     </section>
 
-    <section class="section intro-grid" id="perfil">
+    <section class="section intro-grid screen-panel" id="perfil" data-screen-panel data-screen-name="Perfil" aria-hidden="true">
       <article class="paper-card">
         <p class="eyebrow">Resumo profissional</p>
         <h2>Desenvolvimento orientado ao usuário, ao negócio e à evolução do produto.</h2>
@@ -72,7 +75,7 @@
       </article>
     </section>
 
-    <section class="section projects-section" id="projetos">
+    <section class="section projects-section screen-panel" id="projetos" data-screen-panel data-screen-name="Projetos" aria-hidden="true">
       <div class="section-head centered">
         <p class="eyebrow">Projetos selecionados</p>
         <h2>Produção técnica apresentada em cards 3D.</h2>
@@ -135,8 +138,13 @@
         <button class="carousel-btn next" aria-label="Próximo projeto">›</button>
       </div>
       <div class="dots" id="projectDots" aria-hidden="true"></div>
+      <div class="projects-next-action">
+        <button class="btn ghost compact" type="button" data-screen-target="github">Ver projetos sincronizados</button>
+      </div>
+    </section>
 
-      <section class="github-projects-shell" aria-labelledby="github-projects-title">
+    <section class="section screen-panel github-screen" id="github" data-screen-panel data-screen-name="GitHub" aria-hidden="true">
+      <div class="github-projects-shell" aria-labelledby="github-projects-title">
         <div class="github-projects-head">
           <div>
             <p class="eyebrow">Sincronização automática</p>
@@ -145,21 +153,26 @@
           <button class="btn ghost compact" type="button" data-github-refresh>Atualizar agora</button>
         </div>
         <p class="github-status" data-github-status aria-live="polite">Preparando sincronização com o GitHub...</p>
-        <div class="github-project-grid" data-github-projects aria-live="polite" aria-busy="true">
+        <div class="github-project-grid" data-github-projects data-github-paginated aria-live="polite" aria-busy="true">
           <div class="github-project-skeleton" aria-hidden="true"></div>
           <div class="github-project-skeleton" aria-hidden="true"></div>
           <div class="github-project-skeleton" aria-hidden="true"></div>
         </div>
+        <div class="github-pagination" aria-label="Paginação dos projetos do GitHub">
+          <button type="button" data-github-page-prev aria-label="Página anterior">‹</button>
+          <span class="github-page-label" data-github-page-label>0 / 0</span>
+          <button type="button" data-github-page-next aria-label="Próxima página">›</button>
+        </div>
         <noscript>
           <div class="github-empty-state">
             <strong>Ative o JavaScript para carregar os projetos recentes.</strong>
-            <p>Os estudos de caso selecionados acima continuam disponíveis.</p>
+            <p>Os estudos de caso selecionados continuam disponíveis na tela anterior.</p>
           </div>
         </noscript>
-      </section>
+      </div>
     </section>
 
-    <section class="section competence" id="competencias">
+    <section class="section competence screen-panel" id="competencias" data-screen-panel data-screen-name="Competências" aria-hidden="true">
       <div class="section-head">
         <p class="eyebrow">Competências técnicas</p>
         <h2>Base técnica para construir do visual ao funcionamento.</h2>
@@ -172,7 +185,7 @@
       </div>
     </section>
 
-    <section class="section contact" id="contato">
+    <section class="section contact screen-panel" id="contato" data-screen-panel data-screen-name="Contato" aria-hidden="true">
       <div>
         <p class="eyebrow">Contato</p>
         <h2>Vamos conversar sobre seu próximo projeto?</h2>
@@ -182,15 +195,23 @@
         <a class="btn primary" href="https://wa.me/5511961372048" target="_blank" rel="noopener">WhatsApp</a>
         <a class="btn ghost" href="mailto:Turlang@outlook.com">E-mail</a>
         <a class="btn ghost" href="https://www.linkedin.com/in/evandro-ricardo-de-souza-081155406" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn ghost" href="https://github.com/turlang" target="_blank" rel="noopener">GitHub</a>
       </div>
+      <footer class="contact-footer">
+        <span>© 2026 Evandro Ricardo de Souza.</span>
+        <span>Desenvolvedor Full Stack • SaaS • IA</span>
+      </footer>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <p>© 2026 Evandro Ricardo de Souza. Site pessoal profissional.</p>
-    <p><a href="https://github.com/turlang" target="_blank" rel="noopener">GitHub</a> · <a href="mailto:Turlang@outlook.com">Turlang@outlook.com</a></p>
-  </footer>
+  <aside class="screen-controls" aria-label="Navegação entre telas">
+    <button type="button" data-screen-prev aria-label="Tela anterior">‹</button>
+    <div class="screen-dots" data-screen-dots></div>
+    <span class="screen-progress" data-screen-progress>01 / 06</span>
+    <button type="button" data-screen-next aria-label="Próxima tela">›</button>
+  </aside>
 
   <script src="assets/js/main.js"></script>
+  <script src="assets/js/screen-navigation.js"></script>
 </body>
 </html>
