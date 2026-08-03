@@ -6,6 +6,7 @@
   <title>Evandro Ricardo de Souza | Desenvolvedor Full Stack</title>
   <meta name="description" content="Portfólio profissional de Evandro Ricardo de Souza com projetos Full Stack, SaaS, inteligência artificial, automação, dashboards e experiências web." />
   <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="assets/css/github-projects.css" />
 </head>
 <body>
   <div class="tech-bg" aria-hidden="true"></div>
@@ -61,7 +62,7 @@
         <div class="stats">
           <strong>15+</strong><span>Projetos estruturados</span>
           <strong>7</strong><span>Cases principais na vitrine</span>
-          <strong>100%</strong><span>Foco em solução prática</span>
+          <strong>Auto</strong><span>Sincronização com GitHub</span>
         </div>
       </article>
     </section>
@@ -129,6 +130,28 @@
         <button class="carousel-btn next" aria-label="Próximo projeto">›</button>
       </div>
       <div class="dots" id="projectDots" aria-hidden="true"></div>
+
+      <section class="github-projects-shell" aria-labelledby="github-projects-title">
+        <div class="github-projects-head">
+          <div>
+            <p class="eyebrow">Sincronização automática</p>
+            <h2 id="github-projects-title">Projetos recentes do GitHub.</h2>
+          </div>
+          <button class="btn ghost compact" type="button" data-github-refresh>Atualizar agora</button>
+        </div>
+        <p class="github-status" data-github-status aria-live="polite">Preparando sincronização com o GitHub...</p>
+        <div class="github-project-grid" data-github-projects aria-live="polite" aria-busy="true">
+          <div class="github-project-skeleton" aria-hidden="true"></div>
+          <div class="github-project-skeleton" aria-hidden="true"></div>
+          <div class="github-project-skeleton" aria-hidden="true"></div>
+        </div>
+        <noscript>
+          <div class="github-empty-state">
+            <strong>Ative o JavaScript para carregar os projetos recentes.</strong>
+            <p>Os estudos de caso selecionados acima continuam disponíveis.</p>
+          </div>
+        </noscript>
+      </section>
     </section>
 
     <section class="section competence" id="competencias">
