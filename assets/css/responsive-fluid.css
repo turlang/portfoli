@@ -1,1 +1,534 @@
-placeholder
+/* Camada final de responsividade para a home sem scroll. */
+:root{
+  --app-height:100dvh;
+  --app-width:100vw;
+  --fluid-ease:cubic-bezier(.16,1,.3,1);
+}
+
+body.home-no-scroll{
+  height:var(--app-height);
+  min-height:var(--app-height);
+  touch-action:none;
+}
+
+.home-no-scroll .site-header{
+  height:var(--screen-header-height);
+  min-height:var(--screen-header-height);
+  padding-top:max(12px,env(safe-area-inset-top));
+}
+
+.screen-deck{
+  height:calc(var(--app-height) - var(--screen-header-height));
+}
+
+.screen-panel{
+  visibility:visible!important;
+  padding-top:clamp(18px,4.5vh,48px);
+  padding-right:clamp(72px,6vw,92px);
+  padding-bottom:clamp(62px,7vh,86px);
+  padding-left:clamp(18px,5vw,68px);
+  transform:translate3d(7vw,0,0) scale(.97);
+  filter:blur(5px);
+  will-change:transform,opacity,filter;
+  contain:layout paint;
+  transition:
+    transform .68s var(--fluid-ease),
+    opacity .38s ease,
+    filter .5s ease;
+}
+
+.screen-panel.is-before{
+  transform:translate3d(-7vw,0,0) scale(.97);
+}
+
+.screen-panel.is-after{
+  transform:translate3d(7vw,0,0) scale(.97);
+}
+
+.screen-panel.is-active{
+  transform:translate3d(0,0,0) scale(1);
+  filter:none;
+}
+
+.home-no-scroll .main-nav a,
+.screen-controls,
+.carousel-btn,
+.github-pagination button,
+.project-card,
+.github-project-card,
+.btn{
+  transition-timing-function:var(--fluid-ease);
+}
+
+.home-no-scroll .hero.section{
+  min-height:0;
+  height:100%;
+  grid-template-columns:minmax(0,1.06fr) minmax(340px,.94fr);
+  gap:clamp(26px,4.5vw,72px);
+  padding-top:clamp(18px,4vh,46px);
+  padding-bottom:clamp(58px,7vh,82px);
+}
+
+.home-no-scroll .hero h1{
+  font-size:clamp(42px,min(4.6vw,7.4vh),66px);
+}
+
+.home-no-scroll .hero .lead{
+  font-size:clamp(15px,min(1.45vw,2.45vh),20px);
+  line-height:clamp(1.48,1.2 + .7vh,1.7);
+}
+
+.home-no-scroll .hero-visual{
+  min-height:0;
+  height:min(52vh,450px);
+}
+
+.home-no-scroll .device-3d{
+  width:min(42vw,490px);
+  height:min(31vh,290px);
+}
+
+.home-no-scroll .intro-grid{
+  height:100%;
+  align-content:center;
+  grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);
+  gap:clamp(14px,2vw,24px);
+}
+
+.home-no-scroll .paper-card{
+  padding:clamp(22px,3vw,36px);
+}
+
+.home-no-scroll .paper-card h2{
+  font-size:clamp(28px,min(3.6vw,5.2vh),50px);
+}
+
+.home-no-scroll .paper-card p{
+  font-size:clamp(15px,min(1.45vw,2.3vh),18px);
+}
+
+.home-no-scroll .projects-section{
+  grid-template-rows:auto minmax(0,1fr) auto auto;
+  padding-top:clamp(14px,2.7vh,30px);
+  padding-bottom:clamp(56px,7vh,76px);
+}
+
+.home-no-scroll .projects-section .section-head{
+  margin-bottom:0;
+}
+
+.home-no-scroll .projects-section .section-head h2{
+  font-size:clamp(27px,min(3.1vw,4.8vh),42px);
+}
+
+.home-no-scroll .carousel{
+  height:100%;
+  min-height:300px;
+}
+
+.home-no-scroll .project-card{
+  width:clamp(248px,24vw,306px);
+  height:clamp(314px,50vh,420px);
+  max-height:calc(var(--app-height) - var(--screen-header-height) - 205px);
+  padding:clamp(12px,1.3vw,16px);
+  padding-bottom:52px;
+}
+
+.home-no-scroll .project-art{
+  height:clamp(106px,17vh,154px);
+}
+
+.home-no-scroll .project-card h3{
+  font-size:clamp(20px,2.1vw,25px);
+}
+
+.home-no-scroll .project-card p:not(.tag){
+  display:-webkit-box;
+  overflow:hidden;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:3;
+  font-size:clamp(11px,1.05vw,14px);
+}
+
+.home-no-scroll .project-card .chips{
+  max-height:56px;
+  overflow:hidden;
+}
+
+.home-no-scroll .github-screen .github-projects-shell{
+  padding:clamp(14px,2.2vw,26px);
+  border-radius:clamp(16px,2vw,24px);
+}
+
+.home-no-scroll .github-projects-head h2{
+  font-size:clamp(24px,min(3vw,4.5vh),42px);
+}
+
+.home-no-scroll .github-project-grid{
+  gap:clamp(10px,1.5vw,18px);
+}
+
+.home-no-scroll .repo-card-body{
+  padding:clamp(11px,1.3vw,16px);
+}
+
+.home-no-scroll .competence{
+  height:100%;
+  grid-template-columns:minmax(240px,.78fr) minmax(0,1.22fr);
+  gap:clamp(18px,3vw,36px);
+}
+
+.home-no-scroll .competence-grid{
+  gap:clamp(10px,1.5vw,18px);
+}
+
+.home-no-scroll .competence-grid article{
+  min-height:0;
+  padding:clamp(16px,2vw,24px);
+}
+
+.home-no-scroll .competence-grid p{
+  display:-webkit-box;
+  overflow:hidden;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:4;
+}
+
+.home-no-scroll .contact{
+  height:100%;
+  padding-bottom:clamp(80px,10vh,110px);
+}
+
+.screen-controls{
+  right:max(12px,env(safe-area-inset-right));
+}
+
+@media(max-width:1080px){
+  .screen-panel{
+    padding-right:78px;
+    padding-left:clamp(20px,3vw,36px);
+  }
+
+  .home-no-scroll .hero.section{
+    grid-template-columns:minmax(0,1fr) minmax(300px,.82fr);
+    gap:28px;
+  }
+
+  .home-no-scroll .device-3d{
+    width:min(40vw,420px);
+  }
+}
+
+@media(max-width:900px){
+  :root{--screen-header-height:72px}
+
+  .screen-panel{
+    padding:clamp(16px,3vh,28px) 20px 82px;
+  }
+
+  .home-no-scroll .hero.section{
+    grid-template-columns:1fr;
+    grid-template-rows:auto minmax(150px,1fr);
+    gap:4px;
+  }
+
+  .home-no-scroll .hero-copy{
+    max-width:760px;
+  }
+
+  .home-no-scroll .hero h1{
+    font-size:clamp(40px,min(7.2vw,6.4vh),58px);
+  }
+
+  .home-no-scroll .hero-visual{
+    height:100%;
+    min-height:150px;
+  }
+
+  .home-no-scroll .device-3d{
+    width:min(62vw,400px);
+    height:min(25vh,235px);
+  }
+
+  .home-no-scroll .intro-grid{
+    grid-template-columns:1fr;
+    grid-template-rows:minmax(0,1.1fr) minmax(0,.9fr);
+  }
+
+  .home-no-scroll .competence{
+    grid-template-columns:1fr;
+    grid-template-rows:auto minmax(0,1fr);
+    gap:14px;
+  }
+
+  .home-no-scroll .competence .section-head{
+    max-width:760px;
+  }
+
+  .screen-controls{
+    right:50%;
+    bottom:max(10px,env(safe-area-inset-bottom));
+  }
+}
+
+@media(max-width:650px){
+  :root{--screen-header-height:66px}
+
+  .home-no-scroll .site-header{
+    padding-right:14px;
+    padding-left:14px;
+  }
+
+  .screen-panel{
+    padding:14px 14px 72px;
+  }
+
+  .home-no-scroll .hero.section{
+    grid-template-rows:auto minmax(120px,1fr);
+    padding-top:14px;
+    padding-bottom:70px;
+  }
+
+  .home-no-scroll .hero-copy .eyebrow{
+    margin-bottom:10px;
+  }
+
+  .home-no-scroll .hero h1{
+    margin-bottom:14px;
+    font-size:clamp(32px,min(10.2vw,6vh),44px);
+    line-height:1.02;
+  }
+
+  .home-no-scroll .hero .lead{
+    font-size:clamp(13px,3.7vw,15px);
+    line-height:1.45;
+  }
+
+  .home-no-scroll .hero .actions{
+    margin-top:16px;
+  }
+
+  .home-no-scroll .hero .btn{
+    min-height:44px;
+    padding:0 16px;
+    font-size:12px;
+  }
+
+  .home-no-scroll .hero-visual{
+    min-height:120px;
+  }
+
+  .home-no-scroll .device-3d{
+    width:min(78vw,330px);
+    height:min(22vh,200px);
+  }
+
+  .home-no-scroll .intro-grid{
+    gap:10px;
+  }
+
+  .home-no-scroll .paper-card{
+    padding:18px;
+    border-radius:16px;
+  }
+
+  .home-no-scroll .paper-card h2{
+    margin-bottom:10px;
+    font-size:clamp(23px,6.6vw,29px);
+  }
+
+  .home-no-scroll .paper-card p{
+    margin-top:8px;
+    font-size:13px;
+  }
+
+  .home-no-scroll .stats{
+    gap:2px 12px;
+  }
+
+  .home-no-scroll .stats strong{
+    font-size:27px;
+  }
+
+  .home-no-scroll .projects-section{
+    padding-top:10px;
+  }
+
+  .home-no-scroll .projects-section .section-head .eyebrow,
+  .home-no-scroll .projects-section .section-head>p:last-child{
+    display:none;
+  }
+
+  .home-no-scroll .projects-section .section-head h2{
+    font-size:25px;
+  }
+
+  .home-no-scroll .project-card{
+    width:min(80vw,286px);
+    height:clamp(300px,52vh,374px);
+    max-height:calc(var(--app-height) - var(--screen-header-height) - 150px);
+  }
+
+  .home-no-scroll .project-art{
+    height:clamp(96px,15vh,128px);
+  }
+
+  .home-no-scroll .project-card .tag{
+    margin-top:10px;
+  }
+
+  .home-no-scroll .project-card .chips{
+    margin-top:8px;
+  }
+
+  .home-no-scroll .github-projects-head{
+    align-items:center;
+    flex-direction:row;
+  }
+
+  .home-no-scroll .github-projects-head h2{
+    font-size:23px;
+  }
+
+  .home-no-scroll .github-status{
+    margin:4px 0 8px;
+  }
+
+  .home-no-scroll .github-project-card{
+    border-radius:14px;
+  }
+
+  .home-no-scroll .competence-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+  }
+
+  .home-no-scroll .competence-grid article{
+    padding:13px;
+    border-radius:14px;
+  }
+
+  .home-no-scroll .competence-grid h3{
+    margin-bottom:4px;
+    font-size:15px;
+  }
+
+  .home-no-scroll .competence-grid p{
+    -webkit-line-clamp:4;
+    font-size:11px;
+    line-height:1.4;
+  }
+
+  .home-no-scroll .contact{
+    align-content:center;
+    gap:16px;
+  }
+
+  .home-no-scroll .contact h2{
+    margin-bottom:12px;
+    font-size:clamp(31px,9vw,42px);
+  }
+
+  .home-no-scroll .contact p{
+    font-size:13px;
+  }
+
+  .home-no-scroll .contact-actions{
+    gap:8px;
+  }
+
+  .home-no-scroll .contact-actions .btn{
+    min-height:42px;
+    padding:0 15px;
+  }
+
+  .contact-footer{
+    right:14px;
+    bottom:58px;
+    left:14px;
+    font-size:10px;
+  }
+
+  .screen-controls{
+    max-width:calc(100vw - 24px);
+    gap:7px;
+  }
+}
+
+@media(max-height:780px) and (min-width:651px){
+  .screen-panel{padding-top:14px;padding-bottom:58px}
+  .home-no-scroll .hero.section{padding-top:14px;padding-bottom:56px}
+  .home-no-scroll .hero h1{margin-bottom:14px;font-size:clamp(38px,min(4.1vw,7vh),56px)}
+  .home-no-scroll .hero .lead{font-size:15px;line-height:1.48}
+  .home-no-scroll .hero .actions{margin-top:18px}
+  .home-no-scroll .hero-visual{height:min(44vh,350px)}
+  .home-no-scroll .device-3d{height:min(26vh,230px)}
+  .home-no-scroll .paper-card{padding:22px}
+  .home-no-scroll .paper-card h2{font-size:clamp(27px,min(3.3vw,5.3vh),43px)}
+  .home-no-scroll .paper-card p{font-size:14px}
+  .home-no-scroll .projects-section .section-head .eyebrow{margin-bottom:5px}
+  .home-no-scroll .projects-section .section-head>p:last-child{display:none}
+  .home-no-scroll .project-card{height:min(50vh,360px);max-height:calc(var(--app-height) - var(--screen-header-height) - 150px)}
+  .home-no-scroll .project-art{height:min(15vh,118px)}
+  .home-no-scroll .project-card .chips{margin-top:7px}
+  .home-no-scroll .github-projects-head .eyebrow{display:none}
+  .home-no-scroll .repo-visual{min-height:62px}
+  .home-no-scroll .repo-card-body>p:not(.tag){-webkit-line-clamp:2}
+  .home-no-scroll .repo-topics{max-height:34px}
+  .home-no-scroll .competence-grid article{padding:16px}
+  .home-no-scroll .competence-grid p{-webkit-line-clamp:3;font-size:12px}
+  .home-no-scroll .contact h2{font-size:clamp(34px,min(4.4vw,7vh),56px)}
+}
+
+@media(max-width:650px) and (max-height:720px){
+  .home-no-scroll .hero.section{display:block;padding-top:18px}
+  .home-no-scroll .hero-visual{display:none}
+  .home-no-scroll .hero h1{font-size:clamp(30px,9.4vw,38px)}
+  .home-no-scroll .hero .lead{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:4}
+  .home-no-scroll .paper-card:first-child p:last-child{-webkit-line-clamp:3}
+  .home-no-scroll .project-card{height:clamp(286px,54vh,330px)}
+  .home-no-scroll .project-card p:not(.tag){-webkit-line-clamp:2}
+  .home-no-scroll .project-card .chips span:nth-child(n+4){display:none}
+  .home-no-scroll .github-projects-shell{padding:12px}
+  .home-no-scroll .repo-topics{max-height:30px}
+  .home-no-scroll .competence .section-head p:last-child{display:none}
+  .home-no-scroll .competence-grid p{-webkit-line-clamp:3}
+  .contact-footer span:last-child{display:none}
+}
+
+@media(max-height:520px) and (orientation:landscape){
+  :root{--screen-header-height:58px}
+  .home-no-scroll .brand small{display:none}
+  .screen-panel{padding:8px 70px 10px 18px}
+  .home-no-scroll .hero.section{grid-template-columns:1.15fr .85fr;grid-template-rows:1fr;gap:16px;padding:8px 70px 10px 18px}
+  .home-no-scroll .hero-copy .eyebrow{display:none}
+  .home-no-scroll .hero h1{margin-bottom:8px;font-size:clamp(27px,5.2vw,38px)}
+  .home-no-scroll .hero .lead{-webkit-line-clamp:3;font-size:12px}
+  .home-no-scroll .hero .actions{margin-top:10px}
+  .home-no-scroll .hero .btn{min-height:36px}
+  .home-no-scroll .hero-visual{display:grid;min-height:0}
+  .home-no-scroll .device-3d{width:min(34vw,260px);height:min(40vh,150px)}
+  .home-no-scroll .intro-grid{grid-template-columns:1.25fr .75fr;grid-template-rows:1fr}
+  .home-no-scroll .paper-card{padding:14px}
+  .home-no-scroll .paper-card h2{font-size:23px}
+  .home-no-scroll .paper-card p{font-size:11px}
+  .home-no-scroll .projects-section{padding-top:6px;padding-bottom:8px}
+  .home-no-scroll .projects-section .section-head{display:none}
+  .home-no-scroll .project-card{width:230px;height:calc(var(--app-height) - var(--screen-header-height) - 18px);max-height:none}
+  .home-no-scroll .project-art{height:82px}
+  .home-no-scroll .project-card p:not(.tag){-webkit-line-clamp:1}
+  .home-no-scroll .github-projects-head h2{font-size:20px}
+  .home-no-scroll .github-status{display:none}
+  .home-no-scroll .competence{grid-template-columns:.75fr 1.25fr;grid-template-rows:1fr}
+  .home-no-scroll .competence-grid article{padding:10px}
+  .home-no-scroll .competence-grid p{-webkit-line-clamp:2}
+  .home-no-scroll .contact{grid-template-columns:1fr auto;padding-bottom:10px}
+  .contact-footer{display:none}
+  .screen-controls{top:50%;right:8px;bottom:auto;transform:translateY(-50%);flex-direction:column}
+  .screen-dots{flex-direction:column}
+  .screen-progress{writing-mode:vertical-rl;transform:rotate(180deg)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .screen-panel,.device-3d,.project-card,.github-project-card,.screen-controls,.btn{animation:none!important;transition-duration:.01ms!important}
+}
