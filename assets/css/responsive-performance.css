@@ -1,0 +1,28 @@
+/* Ajustes finais de fluidez e compatibilidade. */
+.home-no-scroll .hero .lead{
+  line-height:1.58;
+}
+
+.screen-panel{
+  filter:none!important;
+  backface-visibility:hidden;
+}
+
+.home-no-scroll.is-screen-transitioning .screen-controls,
+.home-no-scroll.is-screen-transitioning .main-nav{
+  pointer-events:none;
+}
+
+@media(max-width:900px){
+  .screen-panel{
+    transform:translate3d(10vw,0,0) scale(.985);
+  }
+
+  .screen-panel.is-before{
+    transform:translate3d(-10vw,0,0) scale(.985);
+  }
+
+  .screen-panel.is-active{
+    transform:translate3d(0,0,0) scale(1);
+  }
+}
