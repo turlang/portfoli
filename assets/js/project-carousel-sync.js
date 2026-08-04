@@ -1,9 +1,9 @@
 (() => {
   const GITHUB_USER = 'turlang';
   const MAX_AUTOMATIC_PROJECTS = 30;
-  const CACHE_KEY = 'evandro-automatic-3d-projects-v2';
-  const PREVIEW_VERSION = new Date().toISOString().slice(0, 10).replaceAll('-', '');
+  const CACHE_KEY = 'evandro-automatic-3d-projects-v4';
   const IMAGE_CONCURRENCY = 4;
+  const PREVIEW_VERSION = new Date().toISOString().slice(0, 10).replaceAll('-', '');
 
   const featuredProjects = Object.freeze({
     GlossFlow: {
@@ -57,6 +57,13 @@
   const previousButton = carouselWrap.querySelector('.carousel-btn.prev');
   const nextButton = carouselWrap.querySelector('.carousel-btn.next');
   if (!carousel || !previousButton || !nextButton) return;
+
+  carousel.querySelectorAll('.project-preview-image').forEach((image) => image.remove());
+  carousel.querySelectorAll('.project-art').forEach((visual) => {
+    visual.classList.remove('has-preview');
+    delete visual.dataset.previewSignature;
+    delete visual.dataset.previewSource;
+  });
 
   const style = document.createElement('style');
   style.dataset.automaticProjectCards = 'true';
@@ -112,12 +119,12 @@
       display: none;
     }
 
-    .project-card[data-automatic-project="true"] {
+    .project-card[data-project-url] {
       cursor: pointer;
       padding-bottom: 54px;
     }
 
-    .project-card[data-automatic-project="true"]::after {
+    .project-card[data-project-url]::after {
       content: attr(data-action-label);
       position: absolute;
       right: 16px;
@@ -136,7 +143,7 @@
       letter-spacing: .04em;
     }
 
-    .project-card[data-automatic-project="true"]::before {
+    .project-card[data-project-url]::before {
       content: '↗';
       position: absolute;
       right: 28px;
@@ -147,7 +154,7 @@
       pointer-events: none;
     }
 
-    .project-card[data-automatic-project="true"]:focus-visible {
+    .project-card[data-project-url]:focus-visible {
       outline: 3px solid rgba(88,183,255,.92);
       outline-offset: 5px;
     }
@@ -170,6 +177,9 @@
   let current = 0;
   let timer = null;
   let repositoriesByName = new Map();
+  let pointerStartX = 0;
+  let pointerStartY = 0;
+  let pointerMoved = false;
   const imageQueue = [];
   let activeImageLoads = 0;
 
@@ -193,6 +203,7 @@
 
   function safeUrl(value) {
     if (!value) return null;
+
     try {
       const url = new URL(value);
       return ['http:', 'https:'].includes(url.protocol) ? url.href : null;
@@ -256,19 +267,20 @@
   }
 
   function thumPreviewUrl(homepage, version = PREVIEW_VERSION) {
-    const separator = homepage.includes('?') ? '&' : '?';
-    return `https://image.thum.io/get/width/1200/crop/700/noanimate/${homepage}${separator}portfolioPreview=${version}`;
+    const target = new URL(homepage);
+    target.searchParams.set('portfolioPreview', version);
+    return `https://image.thum.io/get/width/1200/crop/700/noanimate/${target.href}`;
   }
 
   function mshotsPreviewUrl(homepage, version = PREVIEW_VERSION) {
-    return `https://s.wordpress.com/mshots/v1/${encodeURIComponent(homepage)}?w=1200&h=700&v=${version}`;
+    return `https://s.wordpress.com/mshots/v1/${encodeURIComponent(homepage)}?w=1200&h=700&v=${encodeURIComponent(version)}`;
   }
 
   function previewCandidates(repositoryName, homepage, version) {
     return [
+      repositoryName ? githubPreviewUrl(repositoryName, version) : null,
       homepage ? thumPreviewUrl(homepage, version) : null,
       homepage ? mshotsPreviewUrl(homepage, version) : null,
-      repositoryName ? githubPreviewUrl(repositoryName, version) : null,
     ].filter(Boolean);
   }
 
@@ -302,12 +314,12 @@
 
       preloadFirstAvailable(job.candidates)
         .then((source) => {
-          if (source && job.image.isConnected) {
-            job.image.src = source;
-            job.visual.dataset.previewSource = source.includes('opengraph.githubassets.com')
-              ? 'github'
-              : 'website';
-          }
+          if (!source || !job.image.isConnected) return;
+
+          job.image.src = source;
+          job.visual.dataset.previewSource = source.includes('opengraph.githubassets.com')
+            ? 'github'
+            : 'website';
         })
         .finally(() => {
           activeImageLoads -= 1;
@@ -321,11 +333,11 @@
     const title = card.querySelector('h3')?.textContent?.trim() || config.repository || 'Projeto';
     if (!visual) return;
 
-    const signature = `${config.repository || ''}|${config.homepage || ''}|${config.version || PREVIEW_VERSION}`;
+    const version = config.version || PREVIEW_VERSION;
+    const signature = `${config.repository || ''}|${config.homepage || ''}|${version}|repository-first`;
     if (visual.dataset.previewSignature === signature) return;
 
     visual.querySelectorAll('.project-preview-image').forEach((image) => image.remove());
-    visual.classList.remove('has-preview');
 
     const image = document.createElement('img');
     image.className = 'project-preview-image';
@@ -340,11 +352,35 @@
     visual.dataset.previewSignature = signature;
     visual.dataset.previewSource = 'generated';
 
-    const candidates = previewCandidates(config.repository, config.homepage, config.version || PREVIEW_VERSION);
+    const candidates = previewCandidates(config.repository, config.homepage, version);
     if (candidates.length) {
       imageQueue.push({ image, visual, candidates });
       processImageQueue();
     }
+  }
+
+  function openProject(url) {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
+  function activateCardLink(card, destination, label) {
+    if (!destination) return;
+
+    card.dataset.projectUrl = destination;
+    card.dataset.actionLabel = label;
+    card.setAttribute('role', 'link');
+    card.setAttribute('aria-label', `${label} de ${card.querySelector('h3')?.textContent || 'projeto'} em uma nova aba`);
+
+    card.addEventListener('click', () => {
+      if (!card.classList.contains('active') || pointerMoved) return;
+      openProject(destination);
+    });
+
+    card.addEventListener('keydown', (event) => {
+      if (!card.classList.contains('active') || !['Enter', ' '].includes(event.key)) return;
+      event.preventDefault();
+      openProject(destination);
+    });
   }
 
   function hydrateFeaturedCards() {
@@ -354,12 +390,21 @@
       if (!project) return;
 
       const repository = repositoriesByName.get(project.repository.toLowerCase());
+      const homepage = safeUrl(project.homepage) || safeUrl(repository?.homepage);
+      const repositoryUrl = safeUrl(repository?.html_url) || `https://github.com/${GITHUB_USER}/${project.repository}`;
+      const destination = homepage || repositoryUrl;
+
       applyPreview(card, {
         repository: project.repository,
-        homepage: safeUrl(project.homepage) || safeUrl(repository?.homepage),
+        homepage,
         language: repository?.language || card.querySelector('.chips span')?.textContent || 'Projeto em destaque',
         version: repository?.pushed_at || repository?.updated_at || PREVIEW_VERSION,
       });
+
+      if (!card.dataset.linkInitialized) {
+        card.dataset.linkInitialized = 'true';
+        activateCardLink(card, destination, homepage ? 'Abrir demonstração' : 'Abrir repositório');
+      }
     });
   }
 
@@ -445,6 +490,7 @@
   function startTimer() {
     stopTimer();
     if (cards.length <= 1) return;
+
     timer = window.setInterval(() => {
       current = (current + 1) % cards.length;
       updateCarousel();
@@ -471,32 +517,53 @@
   carousel.addEventListener('mouseleave', startTimer);
   carousel.addEventListener('focusin', stopTimer);
   carousel.addEventListener('focusout', startTimer);
-  window.addEventListener('resize', updateCarousel, { passive: true });
 
-  function openProject(url) {
-    const link = document.createElement('a');
-    link.href = url;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    link.click();
-  }
+  carousel.addEventListener('pointerdown', (event) => {
+    pointerStartX = event.clientX;
+    pointerStartY = event.clientY;
+    pointerMoved = false;
+  });
+
+  carousel.addEventListener('pointermove', (event) => {
+    const horizontal = Math.abs(event.clientX - pointerStartX);
+    const vertical = Math.abs(event.clientY - pointerStartY);
+    if (horizontal > 8 || vertical > 8) pointerMoved = true;
+  });
+
+  carousel.addEventListener('pointerup', (event) => {
+    const deltaX = event.clientX - pointerStartX;
+    const deltaY = event.clientY - pointerStartY;
+
+    if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      current = deltaX < 0
+        ? (current + 1) % cards.length
+        : (current - 1 + cards.length) % cards.length;
+      updateCarousel();
+      restartTimer();
+    }
+
+    window.setTimeout(() => {
+      pointerMoved = false;
+    }, 0);
+  });
+
+  window.addEventListener('resize', updateCarousel, { passive: true });
 
   function createAutomaticCard(repository) {
     const title = displayRepositoryName(repository.name);
     const homepage = safeUrl(repository.homepage);
-    const destination = homepage || safeUrl(repository.html_url);
+    const repositoryUrl = safeUrl(repository.html_url);
+    const destination = homepage || repositoryUrl;
     if (!destination) return null;
 
-    const topics = Array.isArray(repository.topics) ? repository.topics.slice(0, 3) : [];
+    const topics = (Array.isArray(repository.topics) ? repository.topics : [])
+      .filter((topic) => String(topic).toLowerCase() !== 'portfolio')
+      .slice(0, 3);
     const technologies = [repository.language, ...topics].filter(Boolean).slice(0, 4);
     const article = document.createElement('article');
     article.className = 'project-card';
     article.dataset.automaticProject = 'true';
     article.dataset.repository = repository.name;
-    article.dataset.projectUrl = destination;
-    article.dataset.actionLabel = homepage ? 'Abrir demonstração' : 'Abrir repositório';
-    article.setAttribute('role', 'link');
-    article.setAttribute('aria-label', `${article.dataset.actionLabel} de ${title} em uma nova aba`);
 
     article.innerHTML = `
       <div class="project-art github-auto"><span>${escapeHtml(title)}</span><i></i></div>
@@ -513,13 +580,7 @@
       version: repository.pushed_at || repository.updated_at || PREVIEW_VERSION,
     });
 
-    article.addEventListener('click', () => openProject(destination));
-    article.addEventListener('keydown', (event) => {
-      if (!['Enter', ' '].includes(event.key)) return;
-      event.preventDefault();
-      openProject(destination);
-    });
-
+    activateCardLink(article, destination, homepage ? 'Abrir demonstração' : 'Abrir repositório');
     return article;
   }
 
