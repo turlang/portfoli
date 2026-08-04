@@ -1,23 +1,31 @@
-name: Aplicar tópico portfolio
+name: Sincronizar tópico portfolio
 
 on:
-  push:
-    branches:
-      - agent/corrigir-imagens-e-topicos
   workflow_dispatch:
+  schedule:
+    - cron: '23 3 * * *'
 
-permissions: write-all
+permissions:
+  contents: read
 
 jobs:
-  apply-topic:
+  sync-topics:
     runs-on: ubuntu-latest
     steps:
-      - name: Preservar tópicos e adicionar portfolio
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Validar token administrativo
         env:
-          GH_TOKEN: ${{ github.token }}
+          PORTFOLIO_ADMIN_TOKEN: ${{ secrets.PORTFOLIO_ADMIN_TOKEN }}
         shell: bash
         run: |
-          set -euo pipefail
-          existing="$(gh api "repos/${GITHUB_REPOSITORY}/topics" --jq '.names')"
-          payload="$(jq -cn --argjson existing "$existing" '{names: ($existing + ["portfolio"] | unique)}')"
-          gh api --method PUT "repos/${GITHUB_REPOSITORY}/topics" --input - <<< "$payload"
+          if [ -z "$PORTFOLIO_ADMIN_TOKEN" ]; then
+            echo "Configure o secret PORTFOLIO_ADMIN_TOKEN com Administration: write."
+            exit 1
+          fi
+
+      - name: Adicionar portfolio aos repositórios públicos
+        env:
+          PORTFOLIO_ADMIN_TOKEN: ${{ secrets.PORTFOLIO_ADMIN_TOKEN }}
+        run: node scripts/sync-portfolio-topics.mjs
