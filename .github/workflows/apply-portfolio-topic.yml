@@ -1,0 +1,41 @@
+name: Sincronizar tópico portfolio
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/apply-portfolio-topic.yml'
+      - 'scripts/sync-portfolio-topics.mjs'
+  workflow_dispatch:
+  schedule:
+    - cron: '23 3 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  sync-topics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Verificar token administrativo
+        id: token
+        env:
+          PORTFOLIO_ADMIN_TOKEN: ${{ secrets.PORTFOLIO_ADMIN_TOKEN }}
+        shell: bash
+        run: |
+          if [ -z "$PORTFOLIO_ADMIN_TOKEN" ]; then
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "Sincronização ignorada: configure o secret PORTFOLIO_ADMIN_TOKEN."
+          else
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Adicionar portfolio aos repositórios públicos
+        if: steps.token.outputs.available == 'true'
+        env:
+          PORTFOLIO_ADMIN_TOKEN: ${{ secrets.PORTFOLIO_ADMIN_TOKEN }}
+        run: node scripts/sync-portfolio-topics.mjs
