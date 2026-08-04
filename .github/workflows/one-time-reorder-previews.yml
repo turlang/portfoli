@@ -1,0 +1,67 @@
+name: Ajustar prioridade das imagens dos cards
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/one-time-reorder-previews.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Priorizar imagem do repositório
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path('assets/js/project-carousel-sync.js')
+          content = path.read_text(encoding='utf-8')
+
+          content = content.replace(
+              "const CACHE_KEY = 'evandro-automatic-3d-projects-v2';",
+              "const CACHE_KEY = 'evandro-automatic-3d-projects-v3';",
+              1,
+          )
+
+          old = """  function previewCandidates(repositoryName, homepage, version) {
+    return [
+      homepage ? thumPreviewUrl(homepage, version) : null,
+      homepage ? mshotsPreviewUrl(homepage, version) : null,
+      repositoryName ? githubPreviewUrl(repositoryName, version) : null,
+    ].filter(Boolean);
+  }"""
+
+          new = """  function previewCandidates(repositoryName, homepage, version) {
+    return [
+      repositoryName ? githubPreviewUrl(repositoryName, version) : null,
+      homepage ? thumPreviewUrl(homepage, version) : null,
+      homepage ? mshotsPreviewUrl(homepage, version) : null,
+    ].filter(Boolean);
+  }"""
+
+          if old not in content:
+              raise SystemExit('Bloco previewCandidates não encontrado; nenhuma alteração aplicada.')
+
+          path.write_text(content.replace(old, new, 1), encoding='utf-8')
+
+      - name: Validar JavaScript
+        run: node --check assets/js/project-carousel-sync.js
+
+      - name: Publicar na main
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/js/project-carousel-sync.js
+          git commit -m 'fix: prioriza imagem do repositório nos cards'
+          git push origin main
