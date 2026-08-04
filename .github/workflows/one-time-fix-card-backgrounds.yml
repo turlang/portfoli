@@ -1,0 +1,128 @@
+name: Corrigir capas dos cards 3D
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/one-time-fix-card-backgrounds.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix-card-backgrounds:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Aplicar capas como background
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          js_path = Path('assets/js/project-carousel-sync.js')
+          content = js_path.read_text(encoding='utf-8')
+
+          content = content.replace(
+              "const CACHE_KEY = 'evandro-automatic-3d-projects-v3';",
+              "const CACHE_KEY = 'evandro-automatic-3d-projects-v4';",
+              1,
+          )
+          content = content.replace(
+              "const CACHE_KEY = 'evandro-automatic-3d-projects-v2';",
+              "const CACHE_KEY = 'evandro-automatic-3d-projects-v4';",
+              1,
+          )
+
+          process_pattern = re.compile(
+              r"  function processImageQueue\(\) \{.*?\n  \}\n\n  function applyPreview\(card, config\) \{.*?\n  \}\n\n  function hydrateFeaturedCards",
+              re.S,
+          )
+
+          replacement = r'''  function processImageQueue() {
+    while (activeImageLoads < IMAGE_CONCURRENCY && imageQueue.length) {
+      const job = imageQueue.shift();
+      activeImageLoads += 1;
+
+      preloadFirstAvailable(job.candidates)
+        .then((source) => {
+          if (!source || !job.visual.isConnected) return;
+
+          job.visual.style.backgroundImage = `url("${source}")`;
+          job.visual.dataset.previewSource = source.includes('opengraph.githubassets.com')
+            ? 'github'
+            : 'website';
+        })
+        .finally(() => {
+          activeImageLoads -= 1;
+          processImageQueue();
+        });
+    }
+  }
+
+  function applyPreview(card, config) {
+    const visual = card.querySelector('.project-art');
+    const title = card.querySelector('h3')?.textContent?.trim() || config.repository || 'Projeto';
+    if (!visual) return;
+
+    const version = config.version || PREVIEW_VERSION;
+    const signature = `${config.repository || ''}|${config.homepage || ''}|${version}|background-v1`;
+    if (visual.dataset.previewSignature === signature) return;
+
+    visual.querySelectorAll('.project-preview-image').forEach((image) => image.remove());
+
+    const generatedCover = placeholderImage(title, config.language || 'Projeto do portfólio');
+    visual.style.backgroundImage = `url("${generatedCover}")`;
+    visual.style.backgroundSize = 'cover';
+    visual.style.backgroundPosition = 'center';
+    visual.style.backgroundRepeat = 'no-repeat';
+    visual.classList.add('has-preview');
+    visual.dataset.previewSignature = signature;
+    visual.dataset.previewSource = 'generated';
+
+    const candidates = previewCandidates(
+      config.repository,
+      config.homepage,
+      version,
+    );
+
+    if (candidates.length) {
+      imageQueue.push({ visual, candidates });
+      processImageQueue();
+    }
+  }
+
+  function hydrateFeaturedCards'''
+
+          content, count = process_pattern.subn(replacement, content, count=1)
+          if count != 1:
+              raise SystemExit('Bloco de carregamento de imagens não encontrado.')
+
+          js_path.write_text(content, encoding='utf-8')
+
+          index_path = Path('index.html')
+          index = index_path.read_text(encoding='utf-8')
+          index = re.sub(
+              r'<script src="assets/js/project-carousel-sync\.js(?:\?v=[^"]*)?"></script>',
+              '<script src="assets/js/project-carousel-sync.js?v=20260803-card-bg-1"></script>',
+              index,
+              count=1,
+          )
+          index_path.write_text(index, encoding='utf-8')
+
+      - name: Validar JavaScript
+        run: node --check assets/js/project-carousel-sync.js
+
+      - name: Publicar correção na main
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/js/project-carousel-sync.js index.html
+          git commit -m 'fix: aplica imagens diretamente no fundo dos cards 3D'
+          git push origin main
