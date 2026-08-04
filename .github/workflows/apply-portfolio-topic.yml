@@ -1,0 +1,23 @@
+name: Aplicar tópico portfolio
+
+on:
+  push:
+    branches:
+      - agent/corrigir-imagens-e-topicos
+  workflow_dispatch:
+
+permissions: write-all
+
+jobs:
+  apply-topic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Preservar tópicos e adicionar portfolio
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          existing="$(gh api "repos/${GITHUB_REPOSITORY}/topics" --jq '.names')"
+          payload="$(jq -cn --argjson existing "$existing" '{names: ($existing + ["portfolio"] | unique)}')"
+          gh api --method PUT "repos/${GITHUB_REPOSITORY}/topics" --input - <<< "$payload"
