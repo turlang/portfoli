@@ -126,3 +126,5 @@ jobs:
           git add assets/js/project-carousel-sync.js index.html
           git commit -m 'fix: aplica imagens diretamente no fundo dos cards 3D'
           git push origin main
+
+# trigger: 2026-08-03T21:28-03:00
