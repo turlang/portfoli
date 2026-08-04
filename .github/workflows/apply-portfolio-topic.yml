@@ -1,6 +1,12 @@
 name: Sincronizar tópico portfolio
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/apply-portfolio-topic.yml'
+      - 'scripts/sync-portfolio-topics.mjs'
   workflow_dispatch:
   schedule:
     - cron: '23 3 * * *'
